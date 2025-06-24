@@ -1,0 +1,9 @@
+Flask
+Flask-Login
+Flask-Mail
+Flask-WTF
+Flask-SQLAlchemy
+stripe
+TTS
+torch
+diffusers
