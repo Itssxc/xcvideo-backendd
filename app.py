@@ -8,10 +8,10 @@ import os
 app = Flask(__name__)
 
 # ✅ Final working CORS setup (includes main + Vercel preview domain)
-CORS(app, origins=[
+CORS(app, resources={r"/*": {"origins": [
     "https://xcvideo-frontendnew.vercel.app",
-    "https://xcvideo-frontendnew-167r4yr04-itssxcs-projects.vercel.app"
-], supports_credentials=True)
+    "https://xcvideo-frontendnew-*.vercel.app"
+]}}, supports_credentials=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'super-secret-key'
