@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,8 +7,8 @@ import os
 
 app = Flask(__name__)
 
-# ✅ Correct CORS setup
-CORS(app, origins="https://xcvideo-frontendnew.vercel.app", supports_credentials=True)
+# ✅ Final working CORS setup (only this line)
+CORS(app, origins=["https://xcvideo-frontendnew.vercel.app"], supports_credentials=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'super-secret-key'
@@ -50,7 +49,9 @@ def signup():
         db.session.add(user)
         db.session.commit()
 
-        return jsonify({"message": "Signup successful"}), 200
+        response = jsonify({"message": "Signup successful"})
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        return response, 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -65,7 +66,9 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
-            return jsonify({"message": "Login successful"}), 200
+            response = jsonify({"message": "Login successful"})
+            response.headers.add("Access-Control-Allow-Credentials", "true")
+            return response, 200
 
         return jsonify({"error": "Invalid credentials"}), 401
 
