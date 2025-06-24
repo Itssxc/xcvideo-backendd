@@ -1,13 +1,16 @@
+
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_cors import CORS
+from flask_cors import CORS  # ✅ CORS import
 from db import db, User
 import os
 
 app = Flask(__name__)
 
-# ✅ Configuration
+# ✅ Correct CORS setup
+CORS(app, origins="https://xcvideo-frontendnew.vercel.app", supports_credentials=True)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'super-secret-key'
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
