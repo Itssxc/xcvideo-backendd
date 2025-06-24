@@ -7,15 +7,18 @@ import os
 
 app = Flask(__name__)
 
-# ✅ Final working CORS setup (only this line)
-CORS(app, origins=["https://xcvideo-frontendnew.vercel.app"], supports_credentials=True)
+# ✅ Final working CORS setup (includes main + Vercel preview domain)
+CORS(app, origins=[
+    "https://xcvideo-frontendnew.vercel.app",
+    "https://xcvideo-frontendnew-167r4yr04-itssxcs-projects.vercel.app"
+], supports_credentials=True)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'super-secret-key'
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['SESSION_COOKIE_SECURE'] = True
 
-# ✅ Initialize DB (force create tables on every deploy)
+# ✅ Initialize DB
 db.init_app(app)
 with app.app_context():
     db.create_all()
