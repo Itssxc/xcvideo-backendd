@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xcvideo.ai</title>
+  <style>
+    body { font-family: sans-serif; background: #0e0e0e; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .container { max-width: 400px; padding: 2rem; background: #1e1e1e; border-radius: 12px; box-shadow: 0 0 20px #111; }
+    input, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: none; }
+    input { background: #2e2e2e; color: white; }
+    button { background: #00e0ff; color: black; font-weight: bold; cursor: pointer; }
+    a { color: #00e0ff; text-decoration: none; font-size: 0.9rem; display: block; margin-top: 10px; text-align: center; }
+    h2 { text-align: center; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

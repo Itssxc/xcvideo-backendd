@@ -1,4 +1,1 @@
-
-<h2>Welcome, {{ email }}</h2>
-<p>This is your dashboard.</p>
-<a href="/logout">Logout</a>
+{% extends 'base.html' %} {% block content %}<h2>Welcome, {{ email }}</h2><p style="text-align:center;">You are now logged in.</p><a href="/logout">Logout</a>{% endblock %}

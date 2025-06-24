@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db, User
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -10,8 +11,9 @@ app.config['SECRET_KEY'] = 'super-secret-key'
 
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+if not os.path.exists("site.db"):
+    with app.app_context():
+        db.create_all()
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -60,4 +62,4 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=10000) 
+    app.run(debug=True, host='0.0.0.0', port=10000)
