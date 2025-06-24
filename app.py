@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_cors import CORS  # ✅ CORS import
+from flask_cors import CORS
 from db import db, User
 import os
 
@@ -16,14 +16,10 @@ app.config['SECRET_KEY'] = 'super-secret-key'
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['SESSION_COOKIE_SECURE'] = True
 
-# ✅ Allow cross-origin requests from Vercel frontend
-CORS(app, supports_credentials=True)
-
-# ✅ Initialize DB
+# ✅ Initialize DB (force create tables on every deploy)
 db.init_app(app)
 with app.app_context():
-    if not os.path.exists("site.db"):
-        db.create_all()
+    db.create_all()
 
 # ✅ Login setup
 login_manager = LoginManager()
