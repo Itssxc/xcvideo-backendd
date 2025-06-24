@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,17 +6,23 @@ from db import db, User
 import os
 
 app = Flask(__name__)
+
+# ✅ Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'super-secret-key'
+app.config['SESSION_COOKIE_SAMESITE'] = "None"
+app.config['SESSION_COOKIE_SECURE'] = True
 
-CORS(app, supports_credentials=True)  # ✅ Allow frontend to talk to backend
+# ✅ Allow cross-origin requests from Vercel frontend
+CORS(app, supports_credentials=True)
 
+# ✅ Initialize DB
 db.init_app(app)
-
-if not os.path.exists("site.db"):
-    with app.app_context():
+with app.app_context():
+    if not os.path.exists("site.db"):
         db.create_all()
 
+# ✅ Login setup
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
@@ -26,36 +31,47 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# ✅ ROUTES
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    data = request.get_json()
-    email = data.get('email')
-    password = generate_password_hash(data.get('password'))
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = generate_password_hash(data.get('password'))
 
-    # Check if user already exists
-    if User.query.filter_by(email=email).first():
-        return jsonify({"error": "Email already registered"}), 400
+        if User.query.filter_by(email=email).first():
+            return jsonify({"error": "Email already registered"}), 400
 
-    user = User(email=email, password=password)
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({"message": "Signup successful"}), 200
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify({"message": "Signup successful"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
 
-    user = User.query.filter_by(email=email).first()
-    if user and check_password_hash(user.password, password):
-        login_user(user)
-        return jsonify({"message": "Login successful"}), 200
-    return jsonify({"error": "Invalid credentials"}), 401
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return jsonify({"message": "Login successful"}), 200
+
+        return jsonify({"error": "Invalid credentials"}), 401
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/dashboard')
 @login_required
@@ -70,4 +86,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10000)
-    
