@@ -4,6 +4,5 @@ Flask-Mail
 Flask-WTF
 Flask-SQLAlchemy
 stripe
-TTS
 torch
 diffusers
