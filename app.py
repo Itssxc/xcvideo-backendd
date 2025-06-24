@@ -52,6 +52,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
 
+        # ✅ CORS credentials response
         response = jsonify({"message": "Signup successful"})
         response.headers.add("Access-Control-Allow-Credentials", "true")
         return response, 200
@@ -69,6 +70,8 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
+
+            # ✅ CORS credentials response
             response = jsonify({"message": "Login successful"})
             response.headers.add("Access-Control-Allow-Credentials", "true")
             return response, 200
@@ -77,7 +80,6 @@ def login():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
