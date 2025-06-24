@@ -6,3 +6,4 @@ Flask-SQLAlchemy
 stripe
 torch
 diffusers
+flask-cors
